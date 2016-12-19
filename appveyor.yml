@@ -4,7 +4,7 @@ before_build:
 build:
   publish_nuget: true
 after_build:
-- dotnet pack "Narochno.Slack\project.json" -c Release
+- dotnet pack "src\Narochno.Slack\project.json" -c Release
 artifacts:
 - path: Narochno.Slack\bin\Release\*.nupkg
 deploy:
