@@ -26,6 +26,11 @@ namespace Narochno.Slack
             this.slackConfig = slackConfig;
         }
 
+        /// <summary>
+        /// Posts a message to Slack
+        /// </summary>
+        /// <param name="message">A message object</param>
+        /// <returns>The status code from Slack</returns>
         public async Task<SlackCode> PostMessage(Message message)
         {
             var response = await httpClient.PostAsync(slackConfig.WebHookUrl, new StringContent(JsonConvert.SerializeObject(message), Encoding.UTF8, "application/json"));
