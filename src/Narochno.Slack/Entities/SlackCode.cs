@@ -8,7 +8,7 @@ namespace Narochno.Slack.Entities
         /// Message was sent successfully.
         /// </summary>
         [EnumMember(Value = "ok")]
-        Success,
+        Ok,
         /// <summary>
         /// Typically indicates that received request is malformed — perhaps the JSON is structured incorrectly,
         /// or the message text is not properly escaped. The request should not be retried without correction.

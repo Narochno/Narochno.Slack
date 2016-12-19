@@ -8,7 +8,7 @@ namespace Narochno.Slack
         /// <summary>
         /// Posts text content, without formatting.
         /// </summary>
-        public static Task<SlackCode> PostText(this SlackClient slackClient, string text)
+        public static Task<SlackCode> PostText(this ISlackClient slackClient, string text)
         {
             return slackClient.PostMessage(new Message { Text = text, Markdown = false });
         }
@@ -16,7 +16,7 @@ namespace Narochno.Slack
         /// <summary>
         /// Posts markdown-formatted text.
         /// </summary>
-        public static Task<SlackCode> PostMarkdown(this SlackClient slackClient, string markdown)
+        public static Task<SlackCode> PostMarkdown(this ISlackClient slackClient, string markdown)
         {
             return slackClient.PostMessage(new Message { Text = markdown, Markdown = true });
         }
