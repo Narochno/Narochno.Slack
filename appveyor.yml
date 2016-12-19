@@ -1,0 +1,14 @@
+version: '1.0.0'
+before_build:
+- cmd: dotnet restore
+build:
+  publish_nuget: true
+after_build:
+- dotnet pack "Narochno.Slack\project.json" -c Release
+artifacts:
+- path: Narochno.Slack\bin\Release\*.nupkg
+deploy:
+- provider: Environment
+  name: nuget.org
+  on:
+    branch: master
