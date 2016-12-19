@@ -24,18 +24,21 @@ namespace Narotchno.Slack.Tester
         {
             Console.WriteLine("Posting messages to slack");
 
-            var webHookUrl = "your webhook URL";
-
-            using (var slackClient = new SlackClient())
+            var config = new SlackConfig
             {
-                Console.WriteLine(await slackClient.PostMessage(webHookUrl, new Message { Text = "test" }));
+                WebHookUrl = "your webhook URL"
+            };
 
-                Console.WriteLine(await slackClient.PostMessage(webHookUrl, new Message
+            using (var slackClient = new SlackClient(config))
+            {
+                Console.WriteLine(await slackClient.PostMessage(new Message { Text = "test" }));
+
+                Console.WriteLine(await slackClient.PostMessage(new Message
                 {
                     Text = "test",
                     Channel = "#test",
-                    UserName = "a user",
-                    IconEmoji = ":ghost:",
+                    Username = "a user",
+                    Emoji = ":ghost:",
                     Attachments = new List<Attachment>
                     {
                         new Attachment

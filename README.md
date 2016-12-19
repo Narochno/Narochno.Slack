@@ -3,7 +3,10 @@ A simple Slack client for posting messages with fields and attachments, narochno
 
 ## Example Usage
 ```csharp
-var webHookUrl = "your webhook URL";
+var config = new SlackConfig
+{
+    WebHookUrl = "your webhook URL"
+};
 
 var message = new Message
 {
@@ -23,8 +26,8 @@ var message = new Message
 };
 
 # Optionally dispose
-using (var slackClient = new SlackClient())
+using (var slackClient = new SlackClient(config))
 {
-    await slackClient.PostMessage(webHookUrl, message);
+    await slackClient.PostMessage(message);
 }
 ```

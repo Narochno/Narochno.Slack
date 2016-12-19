@@ -6,6 +6,11 @@ namespace Narochno.Slack
 {
     public interface ISlackClient : IDisposable
     {
-        Task<SlackCode> PostMessage(string webHookUrl, Message message);
+        /// <summary>
+        /// Posts a message to Slack
+        /// </summary>
+        /// <param name="message">A message object</param>
+        /// <returns>The status code from Slack</returns>
+        Task<SlackCode> PostMessage(Message message);
     }
 }
