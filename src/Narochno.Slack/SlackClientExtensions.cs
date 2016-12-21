@@ -1,4 +1,5 @@
 ﻿using Narochno.Slack.Entities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Narochno.Slack
@@ -19,6 +20,14 @@ namespace Narochno.Slack
         public static Task<SlackCode> PostMarkdown(this ISlackClient slackClient, string markdown)
         {
             return slackClient.PostMessage(new Message { Text = markdown, Markdown = true });
+        }
+
+        /// <summary>
+        /// Posts attachments.
+        /// </summary>
+        public static Task<SlackCode> PostAttachments(this ISlackClient slackClient, IEnumerable<Attachment> attachments)
+        {
+            return slackClient.PostMessage(new Message { Attachments = attachments });
         }
     }
 }

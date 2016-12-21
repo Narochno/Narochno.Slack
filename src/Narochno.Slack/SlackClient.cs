@@ -1,4 +1,6 @@
-﻿using Narochno.Slack.Entities;
+﻿using Narochno.Primitives;
+using Narochno.Primitives.Json;
+using Narochno.Slack.Entities;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -33,7 +35,11 @@ namespace Narochno.Slack
         /// <returns>The status code from Slack</returns>
         public async Task<SlackCode> PostMessage(Message message)
         {
-            var response = await httpClient.PostAsync(slackConfig.WebHookUrl, new StringContent(JsonConvert.SerializeObject(message), Encoding.UTF8, "application/json"));
+            message.Username = message.Username.Fallback(slackConfig.Username);
+            message.Channel = message.Channel.Fallback(slackConfig.Channel);
+            message.Emoji = message.Emoji.Fallback(slackConfig.Emoji);
+
+            var response = await httpClient.PostAsync(slackConfig.WebHookUrl, new StringContent(JsonConvert.SerializeObject(message, new OptionalJsonConverter()), Encoding.UTF8, "application/json"));
 
             var responseBody = await response.Content.ReadAsStringAsync();
 
