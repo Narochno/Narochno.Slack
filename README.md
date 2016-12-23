@@ -1,4 +1,4 @@
-# Narochno.Slack [![Build status](https://ci.appveyor.com/api/projects/status/x138qtoy1xj0xypd?svg=true)](https://ci.appveyor.com/project/alanedwardes/narochno-slack)
+# Narochno.Slack [![Build status](https://ci.appveyor.com/api/projects/status/imperehby0ri5rmn/branch/master?svg=true)](https://ci.appveyor.com/project/Narochno/narochno-slack/branch/master)
 A simple Slack client for posting messages with fields and attachments, narochno.
 
 ## Example Usage
