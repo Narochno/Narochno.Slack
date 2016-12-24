@@ -1,12 +1,12 @@
 {
-    "version": "1.4.0",
+  "version": "1.4.1",
 
-    "authors": ["alanedwardes","adamhathcock"],
+  "authors": [ "alanedwardes", "adamhathcock" ],
 
-    "packOptions": {
-        "tags": [ "slack" ],
-        "projectUrl": "https://github.com/Narochno/Narochno.Slack"
-    },
+  "packOptions": {
+    "tags": [ "slack" ],
+    "projectUrl": "https://github.com/Narochno/Narochno.Slack"
+  },
 
   "dependencies": {
     "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.1",
@@ -14,11 +14,11 @@
     "Newtonsoft.Json": "9.0.1"
   },
 
-    "frameworks": {
-        "netstandard1.3": {
-            "dependencies": {
-                "System.Net.Http": "4.1.1"
-            }
-        }
+  "frameworks": {
+    "netstandard1.3": {
+      "dependencies": {
+        "System.Net.Http": "4.1.1"
+      }
     }
+  }
 }
