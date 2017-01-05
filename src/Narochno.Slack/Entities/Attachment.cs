@@ -96,7 +96,7 @@ namespace Narochno.Slack.Entities
         /// display an additional timestamp value as part of the attachment's footer.
         /// </summary>
         [JsonProperty("ts")]
-        public Optional<long> Timestamp { get; set; }
+        public long? Timestamp { get; set; }
 
         /// <summary>
         /// Additional fields to pass with this attachment
