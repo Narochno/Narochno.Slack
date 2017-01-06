@@ -52,5 +52,10 @@ namespace Narochno.Slack.Entities
         /// </summary>
         [EnumString("too_many_attachments")]
         TooManyAttachments,
+        /// <summary>
+        /// Is thrown when a bad Slack webhook URL is passed.
+        /// </summary>
+        [EnumString("Bad token")]
+        BadToken
     }
 }
