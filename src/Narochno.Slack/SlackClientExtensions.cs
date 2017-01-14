@@ -10,7 +10,7 @@ namespace Narochno.Slack
         /// <summary>
         /// Posts text content, without formatting.
         /// </summary>
-        public static Task<SlackCode> PostText(this ISlackClient slackClient, string text, CancellationToken ctx = default(CancellationToken))
+        public static Task PostText(this ISlackClient slackClient, string text, CancellationToken ctx = default(CancellationToken))
         {
             return slackClient.PostMessage(new Message { Text = text, Markdown = false }, ctx);
         }
@@ -18,7 +18,7 @@ namespace Narochno.Slack
         /// <summary>
         /// Posts markdown-formatted text.
         /// </summary>
-        public static Task<SlackCode> PostMarkdown(this ISlackClient slackClient, string markdown, CancellationToken ctx = default(CancellationToken))
+        public static Task PostMarkdown(this ISlackClient slackClient, string markdown, CancellationToken ctx = default(CancellationToken))
         {
             return slackClient.PostMessage(new Message { Text = markdown, Markdown = true }, ctx);
         }
@@ -26,7 +26,7 @@ namespace Narochno.Slack
         /// <summary>
         /// Posts attachments.
         /// </summary>
-        public static Task<SlackCode> PostAttachments(this ISlackClient slackClient, IEnumerable<Attachment> attachments, CancellationToken ctx = default(CancellationToken))
+        public static Task PostAttachments(this ISlackClient slackClient, IEnumerable<Attachment> attachments, CancellationToken ctx = default(CancellationToken))
         {
             return slackClient.PostMessage(new Message { Attachments = attachments }, ctx);
         }

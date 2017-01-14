@@ -1,6 +1,5 @@
 ﻿using Narochno.Primitives;
 using Narochno.Primitives.Json;
-using Narochno.Primitives.Parsing;
 using Narochno.Slack.Entities;
 using Newtonsoft.Json;
 using System;
@@ -39,7 +38,7 @@ namespace Narochno.Slack
         /// </summary>
         /// <param name="message">A message object</param>
         /// <returns>The status code from Slack</returns>
-        public async Task<SlackCode> PostMessage(Message message, CancellationToken ctx)
+        public async Task PostMessage(Message message, CancellationToken ctx)
         {
             message.Username = message.Username.Fallback(slackConfig.Username);
             message.Channel = message.Channel.Fallback(slackConfig.Channel);
@@ -49,7 +48,10 @@ namespace Narochno.Slack
 
             var response = await httpClient.PostAsync(slackConfig.WebHookUrl, new StringContent(json, Encoding.UTF8, "application/json"), ctx);
 
-            return (await response.Content.ReadAsStringAsync()).Parse<SlackCode>();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new SlackClientException(response.StatusCode, await response.Content.ReadAsStringAsync());
+            }
         }
 
         public void Dispose() => httpClient.Dispose();

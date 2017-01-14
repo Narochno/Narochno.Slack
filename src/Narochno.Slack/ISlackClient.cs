@@ -12,6 +12,6 @@ namespace Narochno.Slack
         /// </summary>
         /// <param name="message">A message object</param>
         /// <returns>The status code from Slack</returns>
-        Task<SlackCode> PostMessage(Message message, CancellationToken ctx = default(CancellationToken));
+        Task PostMessage(Message message, CancellationToken ctx = default(CancellationToken));
     }
 }
