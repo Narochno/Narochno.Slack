@@ -16,7 +16,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Narochno.Slack", "src\Naroc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CBDBE04D-3098-432B-B90E-B4BE55DAE664}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Narotchno.Slack.Tester", "test\Narotchno.Slack.Tester\Narotchno.Slack.Tester.xproj", "{8A7BE42C-5139-45EF-B532-A99E45ABA613}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Narochno.Slack.Tester", "test\Narochno.Slack.Tester\Narochno.Slack.Tester.xproj", "{8A7BE42C-5139-45EF-B532-A99E45ABA613}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,11 +1,10 @@
-﻿using Narochno.Slack;
-using Narochno.Slack.Entities;
+﻿using Narochno.Slack.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Narotchno.Slack.Tester
+namespace Narochno.Slack.Tester
 {
     public class Program
     {
@@ -26,19 +25,19 @@ namespace Narotchno.Slack.Tester
             Console.WriteLine("Posting messages to slack");
 
             var provider = new ServiceCollection()
-                .AddSlack(new SlackConfig { WebHookUrl = "https://hooks.slack.com/services/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" })
+                .AddSlack(new SlackConfig { WebHookUrl = "<your webhook url>" })
                 .BuildServiceProvider();
 
             var slackClient = provider.GetService<ISlackClient>();
 
             /// Post some raw text
-            Console.WriteLine(await slackClient.PostText("test"));
+            await slackClient.PostText("test");
 
             // Post some markdown
-            Console.WriteLine(await slackClient.PostMarkdown("_test_"));
+            await slackClient.PostMarkdown("_test_");
 
             // Post a more complicated message
-            Console.WriteLine(await slackClient.PostMessage(new Message
+            await slackClient.PostMessage(new Message
             {
                 Text = "test",
                 Channel = "#test",
@@ -62,7 +61,7 @@ namespace Narotchno.Slack.Tester
                         }
                     }
                 }
-            }));
+            });
 
             Console.WriteLine("Finished posting messages to slack");
             Console.ReadLine();
