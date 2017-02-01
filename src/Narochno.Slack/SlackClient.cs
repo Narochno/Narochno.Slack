@@ -7,6 +7,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net;
+using Polly;
+using Polly.Retry;
 
 namespace Narochno.Slack
 {
@@ -46,12 +49,19 @@ namespace Narochno.Slack
 
             var json = JsonConvert.SerializeObject(message, serializerSettings);
 
-            var response = await httpClient.PostAsync(slackConfig.WebHookUrl, new StringContent(json, Encoding.UTF8, "application/json"), ctx);
+            var response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync(slackConfig.WebHookUrl, new StringContent(json, Encoding.UTF8, "application/json"), ctx));
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new SlackClientException(response.StatusCode, await response.Content.ReadAsStringAsync());
             }
+        }
+
+        public RetryPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return Policy
+                .HandleResult<HttpResponseMessage>(r => r.StatusCode >= HttpStatusCode.InternalServerError)
+                .WaitAndRetryAsync(slackConfig.RetryAttempts, retryAttempt => TimeSpan.FromSeconds(Math.Pow(slackConfig.RetryBackoffExponent, retryAttempt)));
         }
 
         public void Dispose() => httpClient.Dispose();

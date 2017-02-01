@@ -1,4 +1,5 @@
 ﻿using Narochno.Primitives;
+using System;
 
 namespace Narochno.Slack
 {
@@ -26,5 +27,15 @@ namespace Narochno.Slack
         /// Can be overridden in individual messages
         /// </summary>
         public Optional<string> Emoji { get; set; }
+
+        /// <summary>
+        /// The number of times requests will be retried 
+        /// </summary>
+        public int RetryAttempts { get; set; } = 2;
+
+        /// <summary>
+        /// The number of retries will be an exponent of this number
+        /// </summary>
+        public int RetryBackoffExponent { get; set; } = 2;
     }
 }
