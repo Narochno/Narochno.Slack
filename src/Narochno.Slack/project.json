@@ -1,11 +1,14 @@
 {
     "version": "2.1.0",
 
+    "name": "Narochno.Slack",
     "authors": [ "alanedwardes", "adamhathcock" ],
-
+    "description": "A simple Slack client for posting messages with fields and attachments.",
     "packOptions": {
         "tags": [ "slack" ],
-        "projectUrl": "https://github.com/Narochno/Narochno.Slack"
+        "summary": "A simple Slack client for posting messages with fields and attachments.",
+        "projectUrl": "https://github.com/Narochno/Narochno.Slack",
+        "iconUrl": "https://avatars.githubusercontent.com/u/24652538"
     },
 
     "dependencies": {
