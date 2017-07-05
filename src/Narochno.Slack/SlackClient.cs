@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using System.Net;
 using Polly;
 using Polly.Retry;
+using Narochno.Slack.Entities.Responses;
+using Narochno.Slack.Entities.Requests;
+using System.Collections.Generic;
 
 namespace Narochno.Slack
 {
@@ -55,6 +58,27 @@ namespace Narochno.Slack
             {
                 throw new SlackClientException(response.StatusCode, await response.Content.ReadAsStringAsync());
             }
+        }
+
+        public async Task<ChannelsHistoryResponse> ChannelsHistory(ChannelsHistoryRequest request, CancellationToken token)
+        {
+            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(JsonConvert.SerializeObject(request));
+
+            var response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/channels.history", new FormUrlEncodedContent(dictionary), token));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new SlackClientException(response.StatusCode, await response.Content.ReadAsStringAsync());
+            }
+
+            return JsonConvert.DeserializeObject<ChannelsHistoryResponse>(await response.Content.ReadAsStringAsync(), serializerSettings);
+        }
+
+        public async Task<ChatDeleteResponse> ChatDelete(ChatDeleteRequest request, CancellationToken token = default(CancellationToken))
+        {
+            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(JsonConvert.SerializeObject(request));
+
+            
         }
 
         public RetryPolicy<HttpResponseMessage> GetRetryPolicy()

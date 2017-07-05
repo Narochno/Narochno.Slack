@@ -2,6 +2,8 @@
 using Narochno.Slack.Entities;
 using System;
 using System.Threading;
+using Narochno.Slack.Entities.Requests;
+using Narochno.Slack.Entities.Responses;
 
 namespace Narochno.Slack
 {
@@ -13,5 +15,7 @@ namespace Narochno.Slack
         /// <param name="message">A message object</param>
         /// <returns>The status code from Slack</returns>
         Task PostMessage(Message message, CancellationToken ctx = default(CancellationToken));
+        Task<ChannelsHistoryResponse> ChannelsHistory(ChannelsHistoryRequest request, CancellationToken token = default(CancellationToken));
+        Task<ChatDeleteResponse> ChatDelete(ChatDeleteRequest request, CancellationToken token = default(CancellationToken));
     }
 }
