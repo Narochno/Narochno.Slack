@@ -15,7 +15,7 @@ namespace Narochno.Slack
 {
     public class SlackClient : ISlackClient
     {
-        private readonly HttpClient httpClient = new HttpClient();
+        private readonly HttpClient httpClient;
         private readonly SlackConfig slackConfig;
         private readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings
         {
@@ -26,14 +26,10 @@ namespace Narochno.Slack
         /// Initialises a new Slack client with the supplied config object
         /// </summary>
         /// <param name="slackConfig">A confguration object</param>
-        public SlackClient(SlackConfig slackConfig)
+        public SlackClient(HttpClient httpClient, SlackConfig slackConfig)
         {
-            if (slackConfig == null)
-            {
-                throw new ArgumentNullException(nameof(slackConfig));
-            }
-
-            this.slackConfig = slackConfig;
+            this.slackConfig = slackConfig ?? throw new ArgumentNullException(nameof(slackConfig));
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
