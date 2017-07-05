@@ -46,9 +46,9 @@ namespace Narochno.Slack
             message.Channel = message.Channel.Fallback(slackConfig.Channel);
             message.Emoji = message.Emoji.Fallback(slackConfig.Emoji);
 
-            var json = JsonConvert.SerializeObject(message, serializerSettings);
+            string json = JsonConvert.SerializeObject(message, serializerSettings);
 
-            var response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync(slackConfig.WebHookUrl, new StringContent(json, Encoding.UTF8, "application/json"), ctx));
+            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync(slackConfig.WebHookUrl, new StringContent(json, Encoding.UTF8, "application/json"), ctx));
 
             if (!response.IsSuccessStatusCode)
             {
@@ -58,23 +58,63 @@ namespace Narochno.Slack
 
         public async Task<ChannelsHistoryResponse> ChannelsHistory(ChannelsHistoryRequest request, CancellationToken token)
         {
-            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(JsonConvert.SerializeObject(request));
-
-            var response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/channels.history", new FormUrlEncodedContent(dictionary), token));
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new SlackClientException(response.StatusCode, await response.Content.ReadAsStringAsync());
-            }
-
-            return JsonConvert.DeserializeObject<ChannelsHistoryResponse>(await response.Content.ReadAsStringAsync(), serializerSettings);
+            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/channels.history", FormContentFromRequest(request), token));
+            return await EnsureResponseSuccessful<ChannelsHistoryResponse>(response);
         }
 
-        public async Task<ChatDeleteResponse> ChatDelete(ChatDeleteRequest request, CancellationToken token = default(CancellationToken))
+        public async Task<ChatDeleteResponse> ChatDelete(ChatDeleteRequest request, CancellationToken token)
         {
-            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(JsonConvert.SerializeObject(request));
+            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/chat.delete", FormContentFromRequest(request), token));
+            return await EnsureResponseSuccessful<ChatDeleteResponse>(response);
+        }
 
-            
+        public async Task<FilesListResponse> FilesList(FilesListRequest request, CancellationToken token)
+        {
+            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/files.list", FormContentFromRequest(request), token));
+            return await EnsureResponseSuccessful<FilesListResponse>(response);
+        }
+
+        public async Task<FilesDeleteResponse> FilesDelete(FilesDeleteRequest request, CancellationToken token)
+        {
+            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/files.delete", FormContentFromRequest(request), token));
+            return await EnsureResponseSuccessful<FilesDeleteResponse>(response);
+        }
+
+        public async Task<TResponse> EnsureResponseSuccessful<TResponse>(HttpResponseMessage response)
+            where TResponse : BaseResponse
+        {
+            string raw = await response.Content.ReadAsStringAsync();
+
+            TResponse deserialised;
+            try
+            {
+                deserialised = JsonConvert.DeserializeObject<TResponse>(raw);
+            }
+            catch (JsonException)
+            {
+                throw new SlackClientException(response.StatusCode, raw);
+            }
+
+            if (!deserialised.Ok)
+            {
+                throw new SlackClientException(response.StatusCode, deserialised.Error);
+            }
+
+            return deserialised;
+        }
+
+        public FormUrlEncodedContent FormContentFromRequest(BaseRequest request)
+        {
+            try
+            {
+                string json = JsonConvert.SerializeObject(request, serializerSettings);
+                IDictionary<string, string> dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json, serializerSettings);
+                return new FormUrlEncodedContent(dictionary);
+            }
+            catch (JsonException ex)
+            {
+                throw new SlackClientException(HttpStatusCode.BadRequest, ex.Message);
+            }
         }
 
         public RetryPolicy<HttpResponseMessage> GetRetryPolicy()

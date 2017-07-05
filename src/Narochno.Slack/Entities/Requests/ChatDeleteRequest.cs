@@ -4,11 +4,11 @@ namespace Narochno.Slack.Entities.Requests
 {
     public class ChatDeleteRequest : BaseRequest
     {
-        [JsonProperty("channel")]
+        [JsonProperty("channel", Required = Required.Always)]
         public string Channel { get; set; }
-        [JsonProperty("ts")]
+        [JsonProperty("ts", Required = Required.Always)]
         public string Timestamp { get; set; }
-        [JsonProperty("as_user")]
-        public bool AsUser { get; set; }
+        [JsonProperty("as_user", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool? AsUser { get; set; }
     }
 }

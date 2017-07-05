@@ -3,34 +3,6 @@ using System.Collections.Generic;
 
 namespace Narochno.Slack.Entities
 {
-    public class MessageEventEdited
-    {
-        [JsonProperty("user")]
-        public string User { get; set; }
-        [JsonProperty("ts")]
-        public string Timestamp { get; set; }
-    }
-
-    public class MessageEventReaction
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-        [JsonProperty("count")]
-        public int Count { get; set; }
-        [JsonProperty("users")]
-        public IList<string> Users { get; set; } = new List<string>();
-    }
-
-    public class File
-    {
-
-    }
-
-    public class Comment
-    {
-
-    }
-
     public class MessageEvent
     {
         [JsonProperty("type")]
@@ -71,8 +43,6 @@ namespace Narochno.Slack.Entities
         public string Topic { get; set; }
         [JsonProperty("file")]
         public File File { get; set; }
-        [JsonProperty("comment")]
-        public Comment Comment { get; set; }
         [JsonProperty("upload")]
         public bool Upload { get; set; }
         [JsonProperty("hidden")]
