@@ -83,7 +83,8 @@ namespace Narochno.Slack.Entities
         public IList<string> Groups { get; set; } = new List<string>();
         [JsonProperty("ims")]
         public IList<string> IMs { get; set; } = new List<string>();
-        // initial_comment ?
+        [JsonProperty("initial_comment")]
+        public Comment InitialComment { get; set; }
         [JsonProperty("num_stars")]
         public int NumStars { get; set; }
         [JsonProperty("is_starred")]

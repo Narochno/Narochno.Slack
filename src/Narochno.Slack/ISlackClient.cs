@@ -19,5 +19,6 @@ namespace Narochno.Slack
         Task<ChatDeleteResponse> ChatDelete(ChatDeleteRequest request, CancellationToken token = default(CancellationToken));
         Task<FilesListResponse> FilesList(FilesListRequest request, CancellationToken token = default(CancellationToken));
         Task<FilesDeleteResponse> FilesDelete(FilesDeleteRequest request, CancellationToken token = default(CancellationToken));
+        Task<OAuthAccessResponse> OAuthAccess(OAuthAccessRequest request, CancellationToken token = default(CancellationToken));
     }
 }

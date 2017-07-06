@@ -80,6 +80,12 @@ namespace Narochno.Slack
             return await EnsureResponseSuccessful<FilesDeleteResponse>(response);
         }
 
+        public async Task<OAuthAccessResponse> OAuthAccess(OAuthAccessRequest request, CancellationToken token)
+        {
+            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/oauth.access", FormContentFromRequest(request), token));
+            return await EnsureResponseSuccessful<OAuthAccessResponse>(response);
+        }
+
         public async Task<TResponse> EnsureResponseSuccessful<TResponse>(HttpResponseMessage response)
             where TResponse : BaseResponse
         {
