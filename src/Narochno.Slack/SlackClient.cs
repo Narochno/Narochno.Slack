@@ -50,40 +50,28 @@ namespace Narochno.Slack
 
             HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync(slackConfig.WebHookUrl, new StringContent(json, Encoding.UTF8, "application/json"), ctx));
 
-            if (!response.IsSuccessStatusCode)
+            string raw = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode || raw != "ok")
             {
-                throw new SlackClientException(response.StatusCode, await response.Content.ReadAsStringAsync());
+                throw new SlackClientException(response.StatusCode, raw);
             }
         }
 
-        public async Task<ChannelsHistoryResponse> ChannelsHistory(ChannelsHistoryRequest request, CancellationToken token)
-        {
-            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/channels.history", FormContentFromRequest(request), token));
-            return await EnsureResponseSuccessful<ChannelsHistoryResponse>(response);
-        }
+        public Task<EmojiListResponse> EmojiList(EmojiListRequest request, CancellationToken token) => MakeRequest<EmojiListRequest, EmojiListResponse>(request, "emoji.list", token);
+        public Task<ChannelsHistoryResponse> ChannelsHistory(ChannelsHistoryRequest request, CancellationToken token) => MakeRequest<ChannelsHistoryRequest, ChannelsHistoryResponse>(request, "channels.history", token);
+        public Task<ChatDeleteResponse> ChatDelete(ChatDeleteRequest request, CancellationToken token) => MakeRequest<ChatDeleteRequest, ChatDeleteResponse>(request, "chat.delete", token);
+        public Task<FilesListResponse> FilesList(FilesListRequest request, CancellationToken token) => MakeRequest<FilesListRequest, FilesListResponse>(request, "files.list", token);
+        public Task<FilesInfoResponse> FilesInfo(FilesInfoRequest request, CancellationToken token) => MakeRequest<FilesInfoRequest, FilesInfoResponse>(request, "files.info", token);
+        public Task<FilesDeleteResponse> FilesDelete(FilesDeleteRequest request, CancellationToken token) => MakeRequest<FilesDeleteRequest, FilesDeleteResponse>(request, "files.delete", token);
+        public Task<OAuthAccessResponse> OAuthAccess(OAuthAccessRequest request, CancellationToken token) => MakeRequest<OAuthAccessRequest, OAuthAccessResponse>(request, "oauth.access", token);
 
-        public async Task<ChatDeleteResponse> ChatDelete(ChatDeleteRequest request, CancellationToken token)
+        public async Task<TResponse> MakeRequest<TRequest, TResponse>(TRequest request, string method, CancellationToken token)
+            where TRequest : BaseRequest
+            where TResponse : BaseResponse
         {
-            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/chat.delete", FormContentFromRequest(request), token));
-            return await EnsureResponseSuccessful<ChatDeleteResponse>(response);
-        }
-
-        public async Task<FilesListResponse> FilesList(FilesListRequest request, CancellationToken token)
-        {
-            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/files.list", FormContentFromRequest(request), token));
-            return await EnsureResponseSuccessful<FilesListResponse>(response);
-        }
-
-        public async Task<FilesDeleteResponse> FilesDelete(FilesDeleteRequest request, CancellationToken token)
-        {
-            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/files.delete", FormContentFromRequest(request), token));
-            return await EnsureResponseSuccessful<FilesDeleteResponse>(response);
-        }
-
-        public async Task<OAuthAccessResponse> OAuthAccess(OAuthAccessRequest request, CancellationToken token)
-        {
-            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync("https://slack.com/api/oauth.access", FormContentFromRequest(request), token));
-            return await EnsureResponseSuccessful<OAuthAccessResponse>(response);
+            request.Token = request.Token ?? slackConfig.Token;
+            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync($"https://slack.com/api/{method}", FormContentFromRequest(request), token));
+            return await EnsureResponseSuccessful<TResponse>(response);
         }
 
         public async Task<TResponse> EnsureResponseSuccessful<TResponse>(HttpResponseMessage response)
