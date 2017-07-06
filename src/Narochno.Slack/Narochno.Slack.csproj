@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>A simple Slack client for posting messages with fields and attachments.</Description>
-    <VersionPrefix>2.1.2</VersionPrefix>
+    <Version>3.0.0</Version>
     <Authors>alanedwardes;adamhathcock</Authors>
     <TargetFramework>netstandard1.3</TargetFramework>
     <AssemblyName>Narochno.Slack</AssemblyName>
