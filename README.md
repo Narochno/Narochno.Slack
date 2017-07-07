@@ -8,7 +8,7 @@ var config = new SlackConfig
     WebHookUrl = "your webhook URL"
 };
 
-var message = new Message
+var message = new IncomingWebHookRequest
 {
     Text = "test",
     Channel = "#test",
@@ -28,6 +28,6 @@ var message = new Message
 # Optionally dispose
 using (var slackClient = new SlackClient(config))
 {
-    await slackClient.PostMessage(message);
+    await slackClient.IncomingWebHook(message);
 }
 ```

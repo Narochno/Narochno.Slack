@@ -1,7 +1,4 @@
-﻿using Narochno.Primitives;
-using System;
-
-namespace Narochno.Slack
+﻿namespace Narochno.Slack
 {
     public class SlackConfig
     {
@@ -11,22 +8,9 @@ namespace Narochno.Slack
         public string WebHookUrl { get; set; }
 
         /// <summary>
-        /// A username to post using
-        /// Can be overridden in individual messages
+        /// The token for non-webhook API methods to use.
         /// </summary>
-        public Optional<string> Username { get; set; }
-
-        /// <summary>
-        /// A channel to post to (example: #general)
-        /// Can be overridden in individual messages
-        /// </summary>
-        public Optional<string> Channel { get; set; }
-
-        /// <summary>
-        /// The emoji to use when posting (example: :ghost:)
-        /// Can be overridden in individual messages
-        /// </summary>
-        public Optional<string> Emoji { get; set; }
+        public string Token { get; set; }
 
         /// <summary>
         /// The number of times requests will be retried 
