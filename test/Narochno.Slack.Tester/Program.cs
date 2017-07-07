@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Narochno.Slack.Entities.Requests;
 
 namespace Narochno.Slack.Tester
 {
@@ -37,7 +38,7 @@ namespace Narochno.Slack.Tester
             await slackClient.PostMarkdown("_test_");
 
             // Post a more complicated message
-            await slackClient.PostMessage(new Message
+            await slackClient.IncomingWebHook(new IncomingWebHookRequest
             {
                 Text = "test",
                 Channel = "#test",

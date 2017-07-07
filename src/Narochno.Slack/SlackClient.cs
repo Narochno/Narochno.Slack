@@ -35,20 +35,12 @@ namespace Narochno.Slack
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        /// <summary>
-        /// Posts a message to Slack
-        /// </summary>
-        /// <param name="message">A message object</param>
-        /// <returns>The status code from Slack</returns>
-        public async Task PostMessage(Message message, CancellationToken ctx)
+        public async Task IncomingWebHook(IncomingWebHookRequest request, CancellationToken ctx)
         {
-            message.Username = message.Username.Fallback(slackConfig.Username);
-            message.Channel = message.Channel.Fallback(slackConfig.Channel);
-            message.Emoji = message.Emoji.Fallback(slackConfig.Emoji);
+            string url = slackConfig.WebHookUrl ?? throw new SlackClientException(HttpStatusCode.BadRequest, $"{nameof(slackConfig.WebHookUrl)} must have a value");
+            string json = JsonConvert.SerializeObject(request, serializerSettings);
 
-            string json = JsonConvert.SerializeObject(message, serializerSettings);
-
-            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync(slackConfig.WebHookUrl, new StringContent(json, Encoding.UTF8, "application/json"), ctx));
+            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json"), ctx));
 
             string raw = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode || raw != "ok")
@@ -69,7 +61,8 @@ namespace Narochno.Slack
             where TRequest : BaseRequest
             where TResponse : BaseResponse
         {
-            request.Token = request.Token ?? slackConfig.Token;
+            request.Token = request.Token ?? slackConfig.Token ?? throw new SlackClientException(HttpStatusCode.BadRequest, $"{nameof(slackConfig.Token)} is required to make this request");
+
             HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync($"https://slack.com/api/{method}", FormContentFromRequest(request), token));
             return await EnsureResponseSuccessful<TResponse>(response);
         }

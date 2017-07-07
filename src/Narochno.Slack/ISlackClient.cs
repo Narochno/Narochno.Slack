@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Narochno.Slack.Entities;
 using System;
 using System.Threading;
 using Narochno.Slack.Entities.Requests;
@@ -9,7 +8,7 @@ namespace Narochno.Slack
 {
     public interface ISlackClient : IDisposable
     {
-        Task PostMessage(Message message, CancellationToken ctx = default(CancellationToken));
+        Task IncomingWebHook(IncomingWebHookRequest request, CancellationToken ctx = default(CancellationToken));
         Task<ChannelsHistoryResponse> ChannelsHistory(ChannelsHistoryRequest request, CancellationToken token = default(CancellationToken));
         Task<EmojiListResponse> EmojiList(EmojiListRequest request, CancellationToken token = default(CancellationToken));
         Task<ChatDeleteResponse> ChatDelete(ChatDeleteRequest request, CancellationToken token = default(CancellationToken));
