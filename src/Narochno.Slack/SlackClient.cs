@@ -1,6 +1,4 @@
-﻿using Narochno.Primitives;
-using Narochno.Primitives.Json;
-using Narochno.Slack.Entities;
+﻿using Narochno.Primitives.Json;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -25,10 +23,6 @@ namespace Narochno.Slack
             Converters = new[] { new OptionalJsonConverter() }
         };
 
-        /// <summary>
-        /// Initialises a new Slack client with the supplied config object
-        /// </summary>
-        /// <param name="slackConfig">A confguration object</param>
         public SlackClient(HttpClient httpClient, SlackConfig slackConfig)
         {
             this.slackConfig = slackConfig ?? throw new ArgumentNullException(nameof(slackConfig));
