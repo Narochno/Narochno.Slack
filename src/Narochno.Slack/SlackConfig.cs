@@ -1,6 +1,4 @@
-﻿using Narochno.Primitives;
-
-namespace Narochno.Slack
+﻿namespace Narochno.Slack
 {
     public class SlackConfig
     {
