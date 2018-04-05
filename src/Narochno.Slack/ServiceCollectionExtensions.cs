@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Narochno.Slack
 {
@@ -12,9 +11,9 @@ namespace Narochno.Slack
         /// <param name="config">The slack configuration.</param>
         /// <param name="httpClient">Pass in a shared HttpClient instance for better resource usage.</param>
         /// <returns>The passed service collection.</returns>
-        public static IServiceCollection AddSlack(this IServiceCollection services, SlackConfig config, HttpClient httpClient = null)
+        public static IServiceCollection AddSlack(this IServiceCollection services, SlackConfig config)
         {
-            return services.AddSingleton<ISlackClient>(new SlackClient(httpClient ?? new HttpClient(), config));
+            return services.AddSingleton<ISlackClient>(new SlackClient(config));
         }
     }
 }

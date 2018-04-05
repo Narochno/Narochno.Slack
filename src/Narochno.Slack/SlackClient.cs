@@ -1,5 +1,4 @@
-﻿using Narochno.Primitives.Json;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -14,27 +13,21 @@ using System.Collections.Generic;
 
 namespace Narochno.Slack
 {
-    public class SlackClient : ISlackClient
+    internal sealed class SlackClient : ISlackClient
     {
-        private readonly HttpClient httpClient;
-        private readonly SlackConfig slackConfig;
-        private readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings
-        {
-            Converters = new[] { new OptionalJsonConverter() }
-        };
+        private readonly SlackConfig config;
 
-        public SlackClient(HttpClient httpClient, SlackConfig slackConfig)
+        public SlackClient(SlackConfig config)
         {
-            this.slackConfig = slackConfig ?? throw new ArgumentNullException(nameof(slackConfig));
-            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.config = config ?? throw new ArgumentNullException(nameof(config));
         }
 
         public async Task IncomingWebHook(IncomingWebHookRequest request, CancellationToken ctx)
         {
-            string url = slackConfig.WebHookUrl ?? throw new SlackClientException(HttpStatusCode.BadRequest, $"{nameof(slackConfig.WebHookUrl)} must have a value");
-            string json = JsonConvert.SerializeObject(request, serializerSettings);
+            string url = config.WebHookUrl ?? throw new SlackClientException(HttpStatusCode.BadRequest, $"{nameof(config.WebHookUrl)} must have a value");
+            string json = JsonConvert.SerializeObject(request);
 
-            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json"), ctx));
+            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => config.HttpClient.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json"), ctx));
 
             string raw = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode || raw != "ok")
@@ -55,9 +48,9 @@ namespace Narochno.Slack
             where TRequest : BaseRequest
             where TResponse : BaseResponse
         {
-            request.Token = request.Token ?? slackConfig.Token ?? throw new SlackClientException(HttpStatusCode.BadRequest, $"{nameof(slackConfig.Token)} is required to make this request");
+            request.Token = request.Token ?? config.Token ?? throw new SlackClientException(HttpStatusCode.BadRequest, $"{nameof(config.Token)} is required to make this request");
 
-            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => httpClient.PostAsync($"https://slack.com/api/{method}", FormContentFromRequest(request), token));
+            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => config.HttpClient.PostAsync($"https://slack.com/api/{method}", FormContentFromRequest(request), token));
             return await EnsureResponseSuccessful<TResponse>(response);
         }
 
@@ -88,8 +81,8 @@ namespace Narochno.Slack
         {
             try
             {
-                string json = JsonConvert.SerializeObject(request, serializerSettings);
-                IDictionary<string, string> dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json, serializerSettings);
+                string json = JsonConvert.SerializeObject(request);
+                IDictionary<string, string> dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
                 return new FormUrlEncodedContent(dictionary);
             }
             catch (JsonException ex)
@@ -102,9 +95,7 @@ namespace Narochno.Slack
         {
             return Policy
                 .HandleResult<HttpResponseMessage>(r => r.StatusCode >= HttpStatusCode.InternalServerError)
-                .WaitAndRetryAsync(slackConfig.RetryAttempts, retryAttempt => TimeSpan.FromSeconds(Math.Pow(slackConfig.RetryBackoffExponent, retryAttempt)));
+                .WaitAndRetryAsync(config.RetryAttempts, retryAttempt => TimeSpan.FromSeconds(Math.Pow(config.RetryBackoffExponent, retryAttempt)));
         }
-
-        public void Dispose() => httpClient.Dispose();
     }
 }

@@ -1,7 +1,14 @@
-﻿namespace Narochno.Slack
+﻿using System.Net.Http;
+
+namespace Narochno.Slack
 {
-    public class SlackConfig
+    public sealed class SlackConfig
     {
+        /// <summary>
+        /// An HTTP client to use if pooling connections.
+        /// </summary>
+        public HttpClient HttpClient { get; set; } = new HttpClient();
+
         /// <summary>
         /// The URL for an incoming webhook for the client to use.
         /// </summary>

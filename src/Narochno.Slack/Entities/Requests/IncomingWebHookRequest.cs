@@ -1,5 +1,4 @@
-﻿using Narochno.Primitives;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Narochno.Slack.Entities.Requests
@@ -9,26 +8,26 @@ namespace Narochno.Slack.Entities.Requests
         /// <summary>
         /// The mssage text
         /// </summary>
-        [JsonProperty("text")]
-        public Optional<string> Text { get; set; }
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
+        public string Text { get; set; }
 
         /// <summary>
         /// A channel to post to (example: #general)
         /// </summary>
-        [JsonProperty("channel")]
-        public Optional<string> Channel { get; set; }
+        [JsonProperty("channel", NullValueHandling = NullValueHandling.Ignore)]
+        public string Channel { get; set; }
 
         /// <summary>
         /// A username to post using
         /// </summary>
-        [JsonProperty("username")]
-        public Optional<string> Username { get; set; }
+        [JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
+        public string Username { get; set; }
 
         /// <summary>
         /// The emoji to use when posting (example: :ghost:)
         /// </summary>
-        [JsonProperty("icon_emoji")]
-        public Optional<string> Emoji { get; set; }
+        [JsonProperty("icon_emoji", NullValueHandling = NullValueHandling.Ignore)]
+        public string Emoji { get; set; }
 
         /// <summary>
         /// Whether to parse the message text as markdown. Defaults to true.
