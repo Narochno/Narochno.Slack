@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
-using System;
 using System.Threading;
 using Narochno.Slack.Entities.Requests;
 using Narochno.Slack.Entities.Responses;
 
 namespace Narochno.Slack
 {
-    public interface ISlackClient : IDisposable
+    public interface ISlackClient
     {
         Task IncomingWebHook(IncomingWebHookRequest request, CancellationToken ctx = default(CancellationToken));
         Task<ChannelsHistoryResponse> ChannelsHistory(ChannelsHistoryRequest request, CancellationToken token = default(CancellationToken));

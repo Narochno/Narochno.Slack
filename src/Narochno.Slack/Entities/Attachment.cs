@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Narochno.Primitives;
 
 namespace Narochno.Slack.Entities
 {
@@ -9,14 +8,14 @@ namespace Narochno.Slack.Entities
         /// <summary>
         /// A valid URL to an image file that will be displayed inside a message attachment.
         /// </summary>
-        [JsonProperty("image_url")]
-        public Optional<string> ImageUrl { get; set; }
+        [JsonProperty("image_url", NullValueHandling = NullValueHandling.Ignore)]
+        public string ImageUrl { get; set; }
 
         /// <summary>
         /// A valid URL to an image file that will be displayed as a thumbnail on the right side of a message attachment.
         /// </summary>
-        [JsonProperty("thumb_url")]
-        public Optional<string> ThumbUrl { get; set; }
+        [JsonProperty("thumb_url", NullValueHandling = NullValueHandling.Ignore)]
+        public string ThumbUrl { get; set; }
 
         /// <summary>
         /// A plain-text summary of the attachment. This text will be used in clients that don't show
@@ -29,44 +28,44 @@ namespace Narochno.Slack.Entities
         /// An optional value that can either be one of good, warning, danger, or any hex color code (eg. #439FE0).
         /// This value is used to color the border along the left side of the message attachment.
         /// </summary>
-        [JsonProperty("color")]
-        public Optional<string> Color { get; set; }
+        [JsonProperty("color", NullValueHandling = NullValueHandling.Ignore)]
+        public string Color { get; set; }
 
         /// <summary>
         /// This is optional text that appears above the message attachment block.
         /// </summary>
-        [JsonProperty("pretext")]
-        public Optional<string> Pretext { get; set; }
+        [JsonProperty("pretext", NullValueHandling = NullValueHandling.Ignore)]
+        public string Pretext { get; set; }
 
         /// <summary>
         /// Small text used to display the author's name.
         /// </summary>
-        [JsonProperty("author_name")]
-        public Optional<string> AuthorName { get; set; }
+        [JsonProperty("author_name", NullValueHandling = NullValueHandling.Ignore)]
+        public string AuthorName { get; set; }
 
         /// <summary>
         /// A valid URL that will hyperlink the author_name text mentioned above. Will only work if author_name is present.
         /// </summary>
-        [JsonProperty("author_link")]
-        public Optional<string> AuthorLink { get; set; }
+        [JsonProperty("author_link", NullValueHandling = NullValueHandling.Ignore)]
+        public string AuthorLink { get; set; }
 
         /// <summary>
         /// A valid URL that displays a small 16x16px image to the left of the author_name text. Will only work if author_name is present.
         /// </summary>
-        [JsonProperty("author_icon")]
-        public Optional<string> AuthorIcon { get; set; }
+        [JsonProperty("author_icon", NullValueHandling = NullValueHandling.Ignore)]
+        public string AuthorIcon { get; set; }
 
         /// <summary>
         /// The title is displayed as larger, bold text near the top of a message attachment.
         /// </summary>
-        [JsonProperty("title")]
-        public Optional<string> Title { get; set; }
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+        public string Title { get; set; }
 
         /// <summary>
         /// By passing a valid URL in the title_link parameter (optional), the title text will be hyperlinked.
         /// </summary>
-        [JsonProperty("title_link ")]
-        public Optional<string> TitleLink { get; set; }
+        [JsonProperty("title_link", NullValueHandling = NullValueHandling.Ignore)]
+        public string TitleLink { get; set; }
 
         /// <summary>
         /// This is the main text in a message attachment, and can contain standard message markup.
@@ -74,22 +73,22 @@ namespace Narochno.Slack.Entities
         /// and will display a "Show more..." link to expand the content.
         /// Links posted in the text field will not unfurl.
         /// </summary>
-        [JsonProperty("text")]
-        public Optional<string> Text { get; set; }
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
+        public string Text { get; set; }
 
         /// <summary>
         /// Add some brief text to help contextualize and identify an attachment.
         /// Limited to 300 characters, and may be truncated further when displayed to users in environments with limited screen real estate.
         /// </summary>
-        [JsonProperty("footer")]
-        public Optional<string> Footer { get; set; }
+        [JsonProperty("footer", NullValueHandling = NullValueHandling.Ignore)]
+        public string Footer { get; set; }
 
         /// <summary>
         /// To render a small icon beside your footer text, provide a publicly accessible URL string in the footer_icon field.
         /// You must also provide a footer for the field to be recognized.
         /// </summary>
-        [JsonProperty("footer_icon")]
-        public Optional<string> FooterIcon { get; set; }
+        [JsonProperty("footer_icon", NullValueHandling = NullValueHandling.Ignore)]
+        public string FooterIcon { get; set; }
 
         /// <summary>
         /// By providing the ts field with an integer value in "epoch time", the attachment will
