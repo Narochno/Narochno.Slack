@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace Narochno.Slack
 {
-    internal sealed class SlackClient : ISlackClient
+    public sealed class SlackClient : ISlackClient
     {
         private readonly SlackConfig config;
 
