@@ -91,7 +91,7 @@ namespace Narochno.Slack
             }
         }
 
-        public RetryPolicy<HttpResponseMessage> GetRetryPolicy()
+        public AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy()
         {
             return Policy
                 .HandleResult<HttpResponseMessage>(r => r.StatusCode >= HttpStatusCode.InternalServerError)
