@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
-using Polly;
-using Polly.Retry;
 using Narochno.Slack.Entities.Responses;
 using Narochno.Slack.Entities.Requests;
 using System.Collections.Generic;
@@ -15,19 +13,21 @@ namespace Narochno.Slack
 {
     public sealed class SlackClient : ISlackClient
     {
-        private readonly SlackConfig config;
+        private readonly HttpClient _httpClient; 
+        private readonly SlackConfig _config;
 
-        public SlackClient(SlackConfig config)
+        public SlackClient(SlackConfig config, HttpClient httpClient)
         {
-            this.config = config ?? throw new ArgumentNullException(nameof(config));
+            _config = config ?? throw new ArgumentNullException(nameof(config));
+            _httpClient = httpClient;
         }
 
         public async Task IncomingWebHook(IncomingWebHookRequest request, CancellationToken ctx)
         {
-            string url = config.WebHookUrl ?? throw new SlackClientException(HttpStatusCode.BadRequest, $"{nameof(config.WebHookUrl)} must have a value");
+            string url = _config.WebHookUrl ?? throw new SlackClientException(HttpStatusCode.BadRequest, $"{nameof(_config.WebHookUrl)} must have a value");
             string json = JsonConvert.SerializeObject(request);
 
-            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => config.HttpClient.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json"), ctx));
+            HttpResponseMessage response = await _httpClient.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json"), ctx);
 
             string raw = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode || raw != "ok")
@@ -48,9 +48,9 @@ namespace Narochno.Slack
             where TRequest : BaseRequest
             where TResponse : BaseResponse
         {
-            request.Token = request.Token ?? config.Token ?? throw new SlackClientException(HttpStatusCode.BadRequest, $"{nameof(config.Token)} is required to make this request");
+            request.Token = request.Token ?? _config.Token ?? throw new SlackClientException(HttpStatusCode.BadRequest, $"{nameof(_config.Token)} is required to make this request");
 
-            HttpResponseMessage response = await GetRetryPolicy().ExecuteAsync(() => config.HttpClient.PostAsync($"https://slack.com/api/{method}", FormContentFromRequest(request), token));
+            HttpResponseMessage response = await _httpClient.PostAsync($"https://slack.com/api/{method}", FormContentFromRequest(request), token);
             return await EnsureResponseSuccessful<TResponse>(response);
         }
 
@@ -89,13 +89,6 @@ namespace Narochno.Slack
             {
                 throw new SlackClientException(HttpStatusCode.BadRequest, ex.Message);
             }
-        }
-
-        public AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy()
-        {
-            return Policy
-                .HandleResult<HttpResponseMessage>(r => r.StatusCode >= HttpStatusCode.InternalServerError)
-                .WaitAndRetryAsync(config.RetryAttempts, retryAttempt => TimeSpan.FromSeconds(Math.Pow(config.RetryBackoffExponent, retryAttempt)));
         }
     }
 }
