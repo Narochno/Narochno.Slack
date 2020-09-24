@@ -25,13 +25,13 @@ namespace Narochno.Slack.Tester
         {
             Console.WriteLine("Posting messages to slack");
 
-            var provider = new ServiceCollection()
-                .AddSlack(new SlackConfig { WebHookUrl = "<your webhook url>" })
-                .BuildServiceProvider();
+            var services  = new ServiceCollection();
+            services.AddSlack(new SlackConfig {WebHookUrl = "<your webhook url>"});
+            var provider = services.BuildServiceProvider();
 
             var slackClient = provider.GetService<ISlackClient>();
 
-            /// Post some raw text
+            // Post some raw text
             await slackClient.PostText("test");
 
             // Post some markdown

@@ -9,11 +9,11 @@ namespace Narochno.Slack
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="config">The slack configuration.</param>
-        /// <param name="httpClient">Pass in a shared HttpClient instance for better resource usage.</param>
         /// <returns>The passed service collection.</returns>
-        public static IServiceCollection AddSlack(this IServiceCollection services, SlackConfig config)
+        public static IHttpClientBuilder AddSlack(this IServiceCollection services, SlackConfig config)
         {
-            return services.AddSingleton<ISlackClient>(new SlackClient(config));
+            services.AddSingleton(config);
+            return services.AddHttpClient<ISlackClient, SlackClient>();
         }
     }
 }
